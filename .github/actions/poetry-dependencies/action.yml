@@ -1,0 +1,23 @@
+name: poetry-dependencies
+description: Installs Poetry dependencies
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Poetry dependecies
+      id: fetch-cache
+      uses: actions/cache@v3
+      with:
+        path: |
+            ${{ github.workspace }}/.venv
+            ${{ env.PRE_COMMIT_HOME }}
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('**/.pre-commit-config.yaml') }}
+    - if: steps.fetch-cache.outputs.cache-hit != 'true'
+      run: python3 -m venv .venv
+      shell: bash
+    - if: steps.fetch-cache.outputs.cache-hit != 'true'
+      run: poetry install
+      shell: bash
+    - if: steps.fetch-cache.outputs.cache-hit != 'true'
+      run: poetry run pre-commit install --install-hooks
+      shell: bash
