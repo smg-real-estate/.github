@@ -1,0 +1,36 @@
+name: Provides Poetry dependencies, lints code with pre-commit and runs unit tests
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string
+      image_options:
+        required: false
+        type: string
+env:
+  PRE_COMMIT_HOME: /tmp/.cache/pre-commit
+
+jobs:
+  lint-all:
+    name: Lint
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image_name }}
+      options: ${{ inputs.image_options }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: homegate-engineering/.github/.github/actions/poetry-dependencies/@v1
+      - run: poetry run poe lint-all
+
+  test-unit:
+    name: Test Unit
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.image_name }}
+      options: ${{ inputs.image_options }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: homegate-engineering/.github/.github/actions/poetry-dependencies/@v1
+      - run: poetry run poe test-unit

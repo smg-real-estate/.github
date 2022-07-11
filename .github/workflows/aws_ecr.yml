@@ -1,0 +1,64 @@
+name: Publish Docker image to ECR
+on:
+  workflow_call:
+   inputs:
+     push:
+       required: true
+       type: boolean
+     image_path:
+       required: true
+       type: string
+     image_name:
+       required: true
+       type: string
+   secrets:
+     DEPLOYER_ARN:
+       required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  docker-image:
+    name: Build Image for ECR
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: eu-central-1
+        role-to-assume: ${{ secrets.DEPLOYER_ARN }}
+        role-duration-seconds: 3600
+        role-skip-session-tagging: true
+
+    - name: ECR login
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ inputs.image_name }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        BUILD_TIME=$(date +'%Y-%m-%d.%H%M%S')
+        docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
+          -t ${REGISTRY}/${REPOSITORY}:${BUILD_TIME} \
+          ${{ inputs.image_path }}
+
+    - name: Create ECR
+      if: ${{ inputs.push == true }}
+      run: aws ecr describe-repositories --repository-names ${REPOSITORY}
+        || aws ecr create-repository --repository-name ${REPOSITORY}
+
+    - name: Publish
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ inputs.image_name }}
+      if: ${{ inputs.push == true }}
+      run: docker -D push ${REGISTRY}/${REPOSITORY} --all-tags
