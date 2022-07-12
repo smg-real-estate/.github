@@ -1,19 +1,22 @@
 name: Publish Docker image to ECR
 on:
   workflow_call:
-   inputs:
-     push:
-       required: true
-       type: boolean
-     image_path:
-       required: true
-       type: string
-     image_name:
-       required: true
-       type: string
-   secrets:
-     DEPLOYER_ARN:
-       required: true
+    inputs:
+      push:
+        required: true
+        type: boolean
+      image_path:
+        required: true
+        type: string
+      image_name:
+        required: true
+        type: string
+      registries:
+        required: false
+        type: string
+    secrets:
+      DEPLOYER_ARN:
+        required: true
 
 permissions:
   id-token: write
@@ -23,6 +26,10 @@ jobs:
   docker-image:
     name: Build Image for ECR
     runs-on: ubuntu-latest
+
+    env:
+      REPOSITORY: ${{ inputs.image_name }}
+      IMAGE_TAG: ${{ github.sha }}
 
     steps:
     - name: Checkout
@@ -39,26 +46,29 @@ jobs:
     - name: ECR login
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+      with:
+        registries: ${{ inputs.registries }}
 
     - name: Build
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: ${{ inputs.image_name }}
-        IMAGE_TAG: ${{ github.sha }}
       run: |
         BUILD_TIME=$(date +'%Y-%m-%d.%H%M%S')
+        echo "Using registry: $REGISTRY"
         docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
           -t ${REGISTRY}/${REPOSITORY}:${BUILD_TIME} \
+          -t ${REGISTRY}/${REPOSITORY}:latest \
           ${{ inputs.image_path }}
 
     - name: Create ECR
       if: ${{ inputs.push == true }}
+      env:
+        REPOSITORY: ${{ inputs.image_name }}
       run: aws ecr describe-repositories --repository-names ${REPOSITORY}
         || aws ecr create-repository --repository-name ${REPOSITORY}
 
     - name: Publish
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: ${{ inputs.image_name }}
       if: ${{ inputs.push == true }}
-      run: docker -D push ${REGISTRY}/${REPOSITORY} --all-tags
+      run: docker push ${REGISTRY}/${REPOSITORY} --all-tags

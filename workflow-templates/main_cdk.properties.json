@@ -1,10 +1,13 @@
 {
-  "name": "CDK projects Default branch Workflow",
+  "name": "CDK projects main branch Workflow",
   "description": "Workflow that provides deployment jobs for test and prod environments for CDK projects",
   "iconName": "cdk",
   "categories": [
     "Python",
     "CDK",
     "Poetry"
+  ],
+  "filePatterns": [
+    "^cdk.json$"
   ]
 }

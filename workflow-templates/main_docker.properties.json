@@ -6,5 +6,8 @@
     "Docker",
     "AWS",
     "ECR"
+  ],
+  "filePatterns": [
+    "docker/.*Dockerfile"
   ]
 }
