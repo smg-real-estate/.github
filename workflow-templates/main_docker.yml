@@ -1,0 +1,38 @@
+name: Docker Publish (main)
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker/**/*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test_docker:
+    name: Build and push Docker image to test
+    uses: homegate-engineering/.github/.github/workflows/aws_ecr.yml@main
+    with:
+      push: true
+      # specify the path to Dockerfile
+      image_path: docker/mlflow
+      # specify the image name in ECR
+      image_name: mlflow
+    secrets:
+      # IAM role to access ECR
+      DEPLOYER_ARN: ${{ secrets.HG_DATASERVICES_TEST_DEPLOYER_ARN }}
+
+  prod_docker:
+    name: Build and push Docker image to prod
+    uses: homegate-engineering/.github/.github/workflows/aws_ecr.yml@main
+    with:
+      push: true
+      # specify the path to Dockerfile
+      image_path: docker/mlflow
+      # specify the image name in ECR
+      image_name: mlflow
+    secrets:
+      # IAM role to access ECR
+      DEPLOYER_ARN: ${{ secrets.HG_DATASERVICES_PROD_DEPLOYER_ARN }}

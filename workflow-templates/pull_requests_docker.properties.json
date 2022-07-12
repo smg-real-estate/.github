@@ -1,0 +1,10 @@
+{
+  "name": "Pull Requests Worflow for Docker images published to ECR",
+  "description": "Workflow that builds a Docker image for pull requests that include changes in docker/ folder",
+  "iconName": "docker",
+  "categories": [
+    "Docker",
+    "AWS",
+    "ECR"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Main branch Worflow for Docker images published to ECR",
+  "description": "Workflow that publishes a Docker image to ECR in test and/or prod environments for PRs that include changes in docker/ folder",
+  "iconName": "docker",
+  "categories": [
+    "Docker",
+    "AWS",
+    "ECR"
+  ]
+}
