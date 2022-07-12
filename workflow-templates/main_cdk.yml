@@ -1,0 +1,31 @@
+name: CDK (main)
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy_test:
+    name: TEST
+    uses: homegate-engineering/.github/.github/workflows/cdk.yml@main
+    with:
+      image_name: smgrealestate/python-cdk
+      image_options: --user root
+      env: test
+    secrets:
+      DEPLOYER_ARN: ${{ secrets.HG_DATASERVICES_TEST_DEPLOYER_ARN }}
+
+  deploy_prod:
+    name: PROD
+    uses: homegate-engineering/.github/.github/workflows/cdk.yml@main
+    needs: deploy_test
+    with:
+      image_name: smgrealestate/python-cdk
+      image_options: --user root
+      env: prod
+    secrets:
+      DEPLOYER_ARN: ${{ secrets.HG_DATASERVICES_PROD_DEPLOYER_ARN }}

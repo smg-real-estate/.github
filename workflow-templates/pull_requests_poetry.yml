@@ -1,0 +1,17 @@
+name: CDK (pull-request)
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  dependencies:
+    name: Poetry
+    uses: homegate-engineering/.github/.github/workflows/poetry.yml@main
+    with:
+      image_name: smgrealestate/python-cdk
+      image_options: --user root

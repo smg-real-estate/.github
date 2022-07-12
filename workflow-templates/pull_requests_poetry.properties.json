@@ -1,0 +1,12 @@
+{
+  "name": "Pull Requests for Poetry projects Workflow",
+  "description": "Workflow that manages pull requests in Python projects based on Poetry",
+  "iconName": "poetry-logo",
+  "categories": [
+    "Python",
+    "Poetry"
+  ],
+  "filePatterns": [
+    "poetry.lock$"
+  ]
+}
