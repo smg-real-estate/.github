@@ -58,7 +58,7 @@ jobs:
     - name: Build
       env:
         REGISTRY: ${{ steps.aws-login.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-      run: >-
+      run: | 
         BUILD_TIME=$(date +'%Y-%m-%d.%H%M%S')
         echo "Using registry: $REGISTRY"
         docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
@@ -77,4 +77,5 @@ jobs:
       env:
         REGISTRY: ${{ steps.aws-login.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
       if: ${{ inputs.push == true }}
-      run: docker push ${REGISTRY}/${REPOSITORY} --all-tags
+      run: |
+        docker push ${REGISTRY}/${REPOSITORY} --all-tags
