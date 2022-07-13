@@ -11,7 +11,7 @@ permissions:
 jobs:
   dependencies:
     name: Poetry
-    uses: homegate-engineering/.github/.github/workflows/poetry.yml@main
+    uses: smg-real-estate/.github/.github/workflows/poetry.yml@main
     with:
       image_name: smgrealestate/python-cdk
       image_options: --user root

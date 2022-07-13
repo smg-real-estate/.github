@@ -13,7 +13,7 @@ permissions:
 jobs:
   test_docker:
     name: Build and push Docker image to test
-    uses: homegate-engineering/.github/.github/workflows/aws_ecr.yml@main
+    uses: smg-real-estate/.github/.github/workflows/aws_ecr.yml@main
     with:
       push: true
       # specify the path to Dockerfile
@@ -26,7 +26,7 @@ jobs:
 
   prod_docker:
     name: Build and push Docker image to prod
-    uses: homegate-engineering/.github/.github/workflows/aws_ecr.yml@main
+    uses: smg-real-estate/.github/.github/workflows/aws_ecr.yml@main
     with:
       push: true
       # specify the path to Dockerfile

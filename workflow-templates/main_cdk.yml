@@ -11,7 +11,7 @@ permissions:
 jobs:
   deploy_test:
     name: TEST
-    uses: homegate-engineering/.github/.github/workflows/cdk.yml@main
+    uses: smg-real-estate/.github/.github/workflows/cdk.yml@main
     with:
       image_name: smgrealestate/python-cdk
       image_options: --user root
@@ -21,7 +21,7 @@ jobs:
 
   deploy_prod:
     name: PROD
-    uses: homegate-engineering/.github/.github/workflows/cdk.yml@main
+    uses: smg-real-estate/.github/.github/workflows/cdk.yml@main
     needs: deploy_test
     with:
       image_name: smgrealestate/python-cdk

@@ -30,7 +30,7 @@ jobs:
       ENVIRONMENT: ${{ inputs.env }}
     steps:
       - uses: actions/checkout@v3
-      - uses: homegate-engineering/.github/.github/actions/poetry-dependencies/@v1
+      - uses: smg-real-estate/.github/.github/actions/poetry-dependencies/@v1
       - uses: aws-actions/configure-aws-credentials@v1
         id: aws-login
         with:

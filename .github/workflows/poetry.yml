@@ -21,7 +21,7 @@ jobs:
       options: ${{ inputs.image_options }}
     steps:
       - uses: actions/checkout@v3
-      - uses: homegate-engineering/.github/.github/actions/poetry-dependencies/@v1
+      - uses: smg-real-estate/.github/.github/actions/poetry-dependencies/@v1
       - run: poetry run poe lint-all
 
   test-unit:
@@ -32,5 +32,5 @@ jobs:
       options: ${{ inputs.image_options }}
     steps:
       - uses: actions/checkout@v3
-      - uses: homegate-engineering/.github/.github/actions/poetry-dependencies/@v1
+      - uses: smg-real-estate/.github/.github/actions/poetry-dependencies/@v1
       - run: poetry run poe test-unit

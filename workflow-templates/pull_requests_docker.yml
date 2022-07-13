@@ -13,7 +13,7 @@ permissions:
 jobs:
   docker:
     name: Build Docker
-    uses: homegate-engineering/.github/.github/workflows/aws_ecr.yml@main
+    uses: smg-real-estate/.github/.github/workflows/aws_ecr.yml@main
     with:
       push: false
       # specify the path to Dockerfile
