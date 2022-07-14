@@ -25,7 +25,9 @@ jobs:
     container:
       image: ${{ inputs.image_name }}
       options: ${{ inputs.image_options }}
-    environment: ${{ inputs.env }}
+    environment:
+      name: ${{ inputs.env }}
+      url: ${{ steps.cdk-deploy.putputs.api_url }}
     env:
       ENVIRONMENT: ${{ inputs.env }}
     steps:
@@ -43,5 +45,5 @@ jobs:
       - id: cdk-deploy
         run: |
           poetry run cdk deploy --require-approval=never --all --outputs-file ./cdk-outputs.json
-          jq ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json
-          # echo "::set-output name=api_url::$()"
+          endpoint_url=$(jq ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
+          echo "::set-output name=api_url::$endpoint_url"
