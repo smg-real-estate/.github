@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - 'docker/**/*'
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -20,6 +21,8 @@ jobs:
       image_path: docker/mlflow
       # specify the image name in ECR
       image_name: mlflow
+      # extra private ECR registries (AWS accounts) to login into
+      # registries: xxxxxx
     secrets:
       # IAM role to access ECR
       DEPLOYER_ARN: ${{ secrets.HG_DATASERVICES_TEST_DEPLOYER_ARN }}
@@ -33,6 +36,8 @@ jobs:
       image_path: docker/mlflow
       # specify the image name in ECR
       image_name: mlflow
+      # extra private ECR registries (AWS accounts) to login into
+      # registries: xxxxxx
     secrets:
       # IAM role to access ECR
       DEPLOYER_ARN: ${{ secrets.HG_DATASERVICES_PROD_DEPLOYER_ARN }}
