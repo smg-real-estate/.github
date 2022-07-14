@@ -38,5 +38,12 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOYER_ARN }}
           role-duration-seconds: 3600
           role-skip-session-tagging: true
-      - run: poetry run cdk bootstrap aws://${{ steps.aws-login.outputs.aws-account-id }}/eu-central-1
-      - run: poetry run cdk deploy --require-approval=never --all
+# uncomment if bootstrap is needed
+#     - run: poetry run cdk bootstrap aws://${{ steps.aws-login.outputs.aws-account-id }}/eu-central-1
+      - id: cdk-deploy
+        run: |
+          poetry run cdk deploy --require-approval=never --all --outputs-file ./cdk-outputs.json
+          cat ./cdk-outputs.json
+          poetry run cdk list
+          poetry run cdk metadata $(poetry run cdk list) -j
+          # echo "::set-output name=api_url::$()"
