@@ -18,4 +18,4 @@ jobs:
       model_version: ${{ steps.set-model-version.outputs.model_version }}
     steps:
       - id: set-model-version
-        run: echo "::set-output name model_version::2022-07-18/"
+        run: echo "::set-output name=model_version::2022-07-18/"
