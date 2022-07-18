@@ -19,6 +19,14 @@ on:
         description: >-
           A comma-delimited list of AWS account IDs that are associated with the ECR Private registries.
           If you do not specify a registry, the default ECR Private registry is assumed.
+      model_uri:
+        required: false
+        type: string
+        description: Source URI (e.g. S3 Bucket prefix) with model files which need to be included
+      model_version:
+        required: false
+        type: string
+        description: Model version (e.g. S3 Bucket suffix) with model files which need to be included
     secrets:
       DEPLOYER_ARN:
         required: true
@@ -54,6 +62,16 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registries: ${{ steps.aws-login.outputs.aws-account-id }},${{ inputs.registries }}
+
+    - name: Copy model
+      id: copy-model
+      if: ${{ inputs.model_uri != null && inputs.model_version != null}}
+      uses: keithweaver/aws-s3-github-action@v1.0.0
+      with:
+        command: cp
+        source: s3://${{ inputs.model_uri }}/${{ inputs.model_version }}
+        destination: ./model/
+        flags: --recursive
 
     - name: Build
       env:
