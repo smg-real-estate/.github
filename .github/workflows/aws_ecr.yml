@@ -93,7 +93,7 @@ jobs:
         docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
           -t ${REGISTRY}/${REPOSITORY}:${BUILD_TIME} \
           -t ${REGISTRY}/${REPOSITORY}:latest \
-          --build-arg model_path ${{ inputs.model_path }}
+          --build-arg model_path=${{ inputs.model_path }}
           ${{ inputs.image_path }}
 
     - name: Create ECR
