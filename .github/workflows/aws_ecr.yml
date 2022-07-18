@@ -27,6 +27,11 @@ on:
         required: false
         type: string
         description: Model version (e.g. S3 Bucket suffix) with model files which need to be included
+      model_path:
+        required: false
+        type: string
+        description: Model path inside container
+        default: code
     secrets:
       DEPLOYER_ARN:
         required: true
@@ -88,6 +93,7 @@ jobs:
         docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
           -t ${REGISTRY}/${REPOSITORY}:${BUILD_TIME} \
           -t ${REGISTRY}/${REPOSITORY}:latest \
+          --build-arg model_path ${{ inputs.model_path }}
           ${{ inputs.image_path }}
 
     - name: Create ECR
