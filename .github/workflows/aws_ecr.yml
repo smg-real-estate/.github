@@ -43,6 +43,8 @@ jobs:
     env:
       REPOSITORY: ${{ inputs.image_name }}
       IMAGE_TAG: ${{ github.sha }}
+      AWS_REGION: eu-central-1
+      AWS_DEFAULT_REGION: $AWS_REGION
 
     steps:
     - name: Checkout
@@ -52,7 +54,7 @@ jobs:
       id: aws-login
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-region: eu-central-1
+        aws-region: ${{ env.AWS_REGION }}
         role-to-assume: ${{ secrets.DEPLOYER_ARN }}
         role-duration-seconds: 3600
         role-skip-session-tagging: true
@@ -69,9 +71,13 @@ jobs:
       uses: keithweaver/aws-s3-github-action@v1.0.0
       with:
         command: cp
-        source: s3://${{ inputs.model_uri }}/${{ inputs.model_version }}
+        source: ${{ inputs.model_uri }}/${{ inputs.model_version }}
         destination: ./model/
         flags: --recursive
+        aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws_region: ${{ env.AWS_REGION }}
+        aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
 
     - name: Build
       env:
