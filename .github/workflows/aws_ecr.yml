@@ -77,7 +77,7 @@ jobs:
       with:
         command: cp
         source: ${{ inputs.model_uri }}/${{ inputs.model_version }}
-        destination: ./model/
+        destination: ${{ inputs.image_path }}/${{ inputs.model_path }}
         flags: --recursive
         aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
