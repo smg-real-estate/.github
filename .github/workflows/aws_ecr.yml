@@ -84,21 +84,17 @@ jobs:
         aws_region: ${{ env.AWS_REGION }}
         aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
 
-    - name: Save model_version
-      if: ${{ inputs.model_uri != null && inputs.model_version != null}}
-      run: |
-        echo "${{ inputs.model_version }}" > ${{ inputs.image_path }}/${{ inputs.model_path }}/model_version.txt
-
     - name: Build
       env:
         REGISTRY: ${{ steps.aws-login.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
       run: | 
         BUILD_TIME=$(date +'%Y-%m-%d.%H%M%S')
-        echo "${IMAGE_TAG}" > ${{ inputs.image_path }}/code/version.txt
         docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
           -t ${REGISTRY}/${REPOSITORY}:${BUILD_TIME} \
           -t ${REGISTRY}/${REPOSITORY}:latest \
           --build-arg model_path=${{ inputs.model_path }} \
+          --build-arg model_version=${{ inputs.model_version }} \
+          --build-arg app_version=${IMAGE_TAG} \
           ${{ inputs.image_path }}
 
     - name: Create ECR
