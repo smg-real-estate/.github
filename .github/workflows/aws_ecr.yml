@@ -94,7 +94,7 @@ jobs:
         REGISTRY: ${{ steps.aws-login.outputs.aws-account-id }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
       run: | 
         BUILD_TIME=$(date +'%Y-%m-%d.%H%M%S')
-        echo "${IMAGE_TAG}" > ${{ inputs.image_path }}/version.txt
+        echo "${IMAGE_TAG}" > ${{ inputs.image_path }}/code/version.txt
         docker build -t ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG} \
           -t ${REGISTRY}/${REPOSITORY}:${BUILD_TIME} \
           -t ${REGISTRY}/${REPOSITORY}:latest \
