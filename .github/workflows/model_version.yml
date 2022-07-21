@@ -12,7 +12,7 @@ on:
     outputs:
       model_version:
         description: "Model version in production system"
-        value: ${{ jobs.get_model_version.outputs.model_version }}
+        value: ${{ jobs.get_model_version.outputs.model_version }}${{ inputs.new_version }}
 
 jobs:
   get_model_version:
@@ -23,6 +23,3 @@ jobs:
       - id: set-model-version
         if: '! inputs.new_version'
         run: echo "::set-output name=model_version::2022-07-18/"
-      - id: set-model-version
-        if: inputs.new_version
-        run: echo "::set-output name=model_version::${{ inputs.new_version }}"
