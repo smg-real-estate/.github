@@ -21,7 +21,7 @@ jobs:
       model_version: ${{ steps.set-model-version.outputs.model_version }}
     steps:
       - id: set-model-version
-        if: ! inputs.new_version
+        if: '! inputs.new_version'
         run: echo "::set-output name=model_version::2022-07-18/"
       - id: set-model-version
         if: inputs.new_version
