@@ -31,7 +31,7 @@ jobs:
       options: ${{ inputs.image_options }}
     environment:
       name: ${{ inputs.env }}
-      url: ${{ steps.cdk-deploy.outputs.api_url }}
+      url: ${{ steps.cdk-deploy.outputs.api_url }}/docs
     env:
       ENVIRONMENT: ${{ inputs.env }}
       DOCKER_IMAGE_TAG: ${{ inputs.image_tag }}
