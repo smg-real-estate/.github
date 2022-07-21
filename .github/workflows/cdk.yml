@@ -34,6 +34,8 @@ jobs:
       url: ${{ steps.cdk-deploy.outputs.api_url }}
     env:
       ENVIRONMENT: ${{ inputs.env }}
+      DOCKER_IMAGE_TAG: ${{ inputs.image_tag }}
+
     steps:
       - uses: actions/checkout@v3
       - uses: smg-real-estate/.github/.github/actions/poetry-dependencies/@v1
@@ -50,6 +52,6 @@ jobs:
             --require-approval=never \
             --all \
             --outputs-file ./cdk-outputs.json \
-            --parameters imageTag=${{ inputs.image_tag }}
-          endpoint_url=$(jq -r ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
+            --parameters imageTag=${DOCKER_IMAGE_TAG:-latest}
+            endpoint_url=$(jq -r ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
           echo "::set-output name=api_url::$endpoint_url"
