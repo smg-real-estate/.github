@@ -9,6 +9,10 @@ on:
       image_options:
         required: false
         type: string
+      image_tag:
+        required: false
+        type: string
+        default: latest
       env:
         required: false
         type: string
@@ -40,10 +44,12 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOYER_ARN }}
           role-duration-seconds: 3600
           role-skip-session-tagging: true
-# uncomment if bootstrap is needed
-#     - run: poetry run cdk bootstrap aws://${{ steps.aws-login.outputs.aws-account-id }}/eu-central-1
       - id: cdk-deploy
         run: |
-          poetry run cdk deploy --require-approval=never --all --outputs-file ./cdk-outputs.json
+          poetry run cdk deploy \
+            --require-approval=never \
+            --all \
+            --outputs-file ./cdk-outputs.json \
+            --parameters imageTag=${{ inputs.image_tag }}
           endpoint_url=$(jq -r ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
           echo "::set-output name=api_url::$endpoint_url"
