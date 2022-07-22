@@ -19,6 +19,8 @@ on:
     secrets:
       DEPLOYER_ARN:
         required: true
+      DD_API_KEY:
+        required: false
 env:
   PRE_COMMIT_HOME: /tmp/.cache/pre-commit
 
@@ -35,6 +37,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ inputs.env }}
       DOCKER_IMAGE_TAG: ${{ inputs.image_tag }}
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
 
     steps:
       - uses: actions/checkout@v3
