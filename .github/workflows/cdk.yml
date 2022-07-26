@@ -56,3 +56,9 @@ jobs:
            ${{ inputs.cdk_arguments }}
             endpoint_url=$(jq -r ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
           echo "::set-output name=api_url::$endpoint_url"
+      - name: 'Upload cdk-outputs'
+        uses: actions/upload-artifact@v3
+        with:
+          name: cdk-outputs-${{ inputs.env }}
+          path: ./cdk-outputs.json
+          retention-days: 5
