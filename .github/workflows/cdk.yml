@@ -3,17 +3,16 @@ name: Deploys AWS CF stacks using CDK
 on:
   workflow_call:
     inputs:
+      cdk_arguments:
+        required: false
+        type: string
+      env:
+        required: false
+        type: string
       image_name:
         required: true
         type: string
       image_options:
-        required: false
-        type: string
-      image_tag:
-        required: false
-        type: string
-        default: latest
-      env:
         required: false
         type: string
     secrets:
@@ -36,7 +35,6 @@ jobs:
       url: ${{ steps.cdk-deploy.outputs.api_url }}/docs
     env:
       ENVIRONMENT: ${{ inputs.env }}
-      DOCKER_IMAGE_TAG: ${{ inputs.image_tag }}
       DD_API_KEY: ${{ secrets.DD_API_KEY }}
 
     steps:
@@ -55,6 +53,6 @@ jobs:
             --require-approval=never \
             --all \
             --outputs-file ./cdk-outputs.json \
-            --parameters imageTag=${DOCKER_IMAGE_TAG:-latest}
+           ${{ inputs.cdk_arguments }}
             endpoint_url=$(jq -r ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
           echo "::set-output name=api_url::$endpoint_url"
