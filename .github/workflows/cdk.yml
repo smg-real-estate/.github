@@ -15,6 +15,9 @@ on:
       image_options:
         required: false
         type: string
+      outputs_stack_name:
+        required: false
+        type: string
     secrets:
       DEPLOYER_ARN:
         required: true
@@ -36,6 +39,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ inputs.env }}
       DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      OUTPUTS_STACK: ${{ inputs.outputs_stack_name }}-${{ inputs.env }}
 
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +58,7 @@ jobs:
             --all \
             --outputs-file ./cdk-outputs.json \
            ${{ inputs.cdk_arguments }}
-            endpoint_url=$(jq -r ".[\"$(jq -r '.| keys[0]' ./cdk-outputs.json)\"].ApiEndpoint" ./cdk-outputs.json)
+            endpoint_url=$(jq -r ".[\"${OUTPUTS_STACK}\"].ApiEndpoint" ./cdk-outputs.json)
           echo "::set-output name=api_url::$endpoint_url"
       - name: 'Upload cdk-outputs'
         uses: actions/upload-artifact@v3
